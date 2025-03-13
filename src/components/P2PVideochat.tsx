@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Chat from './Chat';
 
 const SERVER_URL = "wss://zing-signaling-socket-production.up.railway.app";
 
@@ -174,14 +175,38 @@ const P2PVideochat = () => {
     };
 
     return (
-        <div>
-            <h2>P2P Video Chat</h2>
-            <video ref={localVideoRef} autoPlay playsInline style={{ width: '300px' }} />
-            <video ref={remoteVideoRef} autoPlay playsInline style={{ width: '300px' }} />
-            {!isCallActive ? (
-                <button onClick={startCall}>Start Call</button>
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-6">
+            <h2 className="text-2xl font-bold mb-4">P2P Video Chat</h2>
+
+            <div className="flex flex-col md:flex-row items-center gap-6">
+                <video ref={localVideoRef} autoPlay playsInline className="w-72 h-48 rounded-lg border border-gray-700 shadow-lg" />
+                <video ref={remoteVideoRef} autoPlay playsInline className="w-72 h-48 rounded-lg border border-gray-700 shadow-lg" />
+            </div>
+
+            <div className="flex gap-4 mt-6">
+                {!isCallActive ? (
+                    <button
+                        onClick={startCall}
+                        className="px-6 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white font-semibold transition duration-200 shadow-md"
+                    >
+                        Start Call
+                    </button>
+                ) : (
+                    <button
+                        onClick={endCall}
+                        className="px-6 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white font-semibold transition duration-200 shadow-md"
+                    >
+                        End Call
+                    </button>
+                )}
+            </div>
+
+            {isCallActive && signalingSocket.current ? (
+                <div className="w-full mt-6">
+                    <Chat socket={signalingSocket.current} />
+                </div>
             ) : (
-                <button onClick={endCall}>End Call</button>
+                <p className="mt-4 text-gray-400">No chats to show</p>
             )}
         </div>
     );
